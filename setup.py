@@ -3,7 +3,6 @@ from codecs import open
 from os import path
 
 BASE_DIR = path.abspath(path.dirname(__file__))
-long_desc = ""
 with open(path.join(BASE_DIR, 'README.rst'), encoding='utf-8') as f:
     long_desc = f.read()
 
@@ -25,4 +24,5 @@ setup(
     ],
 
     keywords='health check service monitoring network',
+    packages=['healthysnake'],
 )
