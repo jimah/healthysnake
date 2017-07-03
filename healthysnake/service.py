@@ -11,10 +11,10 @@ class Service(object):
 
     DEFAULT_INTERVAL = 10
 
-    def __init__(self, name, check, interval=timedelta(seconds=DEFAULT_INTERVAL), severity=LEVEL_HARD):
+    def __init__(self, name, check, interval=timedelta(seconds=DEFAULT_INTERVAL), level=LEVEL_HARD):
         self.name = name
         self.last_updated = datetime.utcnow()
-        self.level = severity
+        self.level = level
 
         self._check = check
         self._interval = interval

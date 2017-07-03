@@ -16,10 +16,10 @@ class HealthCheck(object):
         self.name = name
 
     def add_dependency(self, name, check_func,
-                       interval=timedelta(seconds=Service.DEFAULT_INTERVAL), severity=Service.LEVEL_HARD):
+                       interval=timedelta(seconds=Service.DEFAULT_INTERVAL), level=Service.LEVEL_HARD):
         if name in self._services:
             raise exceptions.DependencyAlreadyPresentException(name + ' already present in health check')
-        srv = Service(name, check_func, interval, severity)
+        srv = Service(name, check_func, interval, level)
         self._services[name] = srv
 
     def check_dependency(self, name):
