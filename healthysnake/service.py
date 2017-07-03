@@ -22,7 +22,7 @@ class Service(object):
         self.update()
 
     def __str__(self):
-        return "{name} [state={state}, level={level}]!".format(
+        return '{name} [state={state}, level={level}]'.format(
             name=self.name, state=self._state_str(), level=self.level)
 
     def _state_str(self):
