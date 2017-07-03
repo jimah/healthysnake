@@ -40,7 +40,3 @@ class TestServiceInitialisation(object):
         assert srv.healthy() is False
         srv.last_updated = srv.last_updated - timedelta(seconds=60)
         assert srv.healthy() is True
-
-
-
-

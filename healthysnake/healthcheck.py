@@ -24,7 +24,7 @@ class HealthCheck(object):
         self._services[name] = srv
 
     def check_dependency(self, name):
-        if name not in self._services:
+        if name not in self._services.keys():
             raise exceptions.DependencyNotPresentException(name + ' not present in health check dependencies')
         return self._services[name].healthy()
 

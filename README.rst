@@ -6,6 +6,8 @@ healthysnake is a flexible levels-based monitoring library for your application'
 Applications may have both hard dependencies which are required for the app to continue running and soft which allow
 the app to continue with degraded service.
 
+All times are in UTC.
+
 Installation
 ~~~~~~~~~~~~
 
