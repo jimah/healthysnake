@@ -1,0 +1,2 @@
+SOFT = "soft"
+HARD = "hard"
