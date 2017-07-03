@@ -1,17 +1,16 @@
 from datetime import datetime, timedelta
 
+from healthysnake.levels import HARD
+
 
 class Service(object):
-
-    LEVEL_HARD = "hard"
-    LEVEL_SOFT = "soft"
 
     STATE_HEALTHY = "healthy"
     STATE_UNHEALTHY = "unhealthy"
 
     DEFAULT_INTERVAL = 10
 
-    def __init__(self, name, check, interval=timedelta(seconds=DEFAULT_INTERVAL), level=LEVEL_HARD):
+    def __init__(self, name, check, interval=timedelta(seconds=DEFAULT_INTERVAL), level=HARD):
         self.name = name
         self.last_updated = datetime.utcnow()
         self.level = level

@@ -2,8 +2,9 @@
 healthysnake
 ============
 
-healthysnake is a library for monitoring the state of your applications dependencies. For example ensuring that a database
-can be connected to, redis can be pinged or an external service is returning HTTP 200.
+healthysnake is a flexible levels-based monitoring library for your application's network dependencies.
+Applications may have both hard dependencies which are required for the app to continue running and soft which allow
+the app to continue with degraded service.
 
 Installation
 ~~~~~~~~~~~~
@@ -20,10 +21,10 @@ Example usage
 .. code-block:: python
 
     from datetime import timedelta
-    from healthsnake import HealthCheck, Service
+    from healthysnake import healthcheck, levels
 
     # initialise the health check for your application
-    hc = HealthCheck('your_application_name')
+    hc = healthcheck.HealthCheck('your_application_name')
 
     # health check functions simply need to return true or false
     def check_redis_health():
@@ -45,4 +46,4 @@ Example usage
 
     # for non vital services, you can mark them as a "soft" dependency, one that your app can continue
     # without
-    hc.add_dependency('non_vital_service', check_external_service_health, level=Service.LevelSoft)
+    hc.add_dependency('non_vital_service', check_external_service_health, level=levels.SOFT)
