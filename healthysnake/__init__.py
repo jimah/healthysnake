@@ -1,13 +1,18 @@
 from time import mktime, sleep
 from datetime import datetime, timedelta
 
-from healthysnake import levels
-
 
 class Service(object):
+
+    LEVEL_HARD = "hard"
+    LEVEL_SOFT = "soft"
+
+    STATE_HEALTHY = "healthy"
+    STATE_UNHEALTHY = "unhealthy"
+
     DEFAULT_INTERVAL = 10
 
-    def __init__(self, name, check, interval=timedelta(seconds=DEFAULT_INTERVAL), severity=levels.HARD):
+    def __init__(self, name, check, interval=timedelta(seconds=DEFAULT_INTERVAL), severity=LEVEL_HARD):
         self.name = name
         self.last_updated = datetime.utcnow()
         self.level = severity
@@ -23,9 +28,7 @@ class Service(object):
             name=self.name, state=self._state_str(), level=self.level)
 
     def _state_str(self):
-        if self._healthy:
-            return "healthy"
-        return "unhealthy"
+        return self.STATE_HEALTHY if self._healthy else self.STATE_UNHEALTHY
 
     def update(self):
         self._healthy = bool(self._check())
@@ -47,17 +50,26 @@ class HealthCheck(object):
 
     dependencies = {}
     healthy = True
+
     _services = {}
 
     def __init__(self, name):
-        # TODO allow multiple checks passed in
+        # TODO allow multiple checks passed into initialiser
         self.name = name
 
     def add_dependency(self, name, check_func,
-                       interval=timedelta(seconds=Service.DEFAULT_INTERVAL), severity=levels.HARD):
-        # TODO add a new health check
+                       interval=timedelta(seconds=Service.DEFAULT_INTERVAL), severity=Service.LEVEL_HARD):
+        if name in self._services:
+            # TODO proper error
+            raise ValueError('already there m8')
         srv = Service(name, check_func, interval, severity)
         self._services[name] = srv
+
+    def check_dependency(self, name):
+        if name not in self._services:
+            # TODO proper error
+            raise ValueError('doesn\'t exist badger')
+        return self._services[name].healthy()
 
     def status(self):
         healthy = True
@@ -65,6 +77,7 @@ class HealthCheck(object):
         for name, dependency in self._services.items():
             if not dependency.healthy() and dependency.level == levels.HARD:
                 healthy = False
+
             dependencies.append({
                 'name': name,
                 'healthy': healthy,
@@ -72,7 +85,9 @@ class HealthCheck(object):
                 'last_updated': mktime(dependency.last_updated.timetuple()),
                 'next_update': mktime(dependency.next_update().timetuple()),
             })
+
         self.healthy = healthy
+
         return {
             'name': self.name,
             'healthy': self.healthy,
