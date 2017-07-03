@@ -12,8 +12,9 @@ class HealthCheck(object):
 
     _services = {}
 
-    def __init__(self, name):
+    def __init__(self, name, logger=None):
         self.name = name
+        self._logger = logger
 
     def add_dependency(self, name, check_func,
                        interval=timedelta(seconds=Service.DEFAULT_INTERVAL), level=levels.HARD):
@@ -28,21 +29,32 @@ class HealthCheck(object):
         return self._services[name].healthy()
 
     def status(self):
-        healthy = True
+        service_healthy = True
         dependencies = []
         for name, dependency in self._services.items():
-            if not dependency.healthy() and dependency.level == levels.HARD:
-                healthy = False
+            dependency_healthy = False
+
+            try:
+                dependency_healthy = dependency.health()
+            except Exception as e:
+                # TODO figure out the best way of doing this
+                if self._logger:
+                    self._logger.exception(e)
+                else:
+                    raise e
+
+            if not dependency_healthy and dependency.level == levels.HARD:
+                service_healthy = False
 
             dependencies.append({
                 'name': name,
-                'healthy': healthy,
+                'healthy': dependency_healthy,
                 'level': dependency.level,
                 'last_updated': mktime(dependency.last_updated.timetuple()),
                 'next_update': mktime(dependency.next_update().timetuple()),
             })
 
-        self.healthy = healthy
+        self.healthy = service_healthy
 
         return {
             'name': self.name,

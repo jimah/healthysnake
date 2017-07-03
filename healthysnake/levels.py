@@ -1,2 +1,2 @@
-HARD = "hard"
-SOFT = "soft"
+HARD = 1
+SOFT = 2
