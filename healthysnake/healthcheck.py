@@ -7,14 +7,12 @@ from healthysnake.service import Service
 
 class HealthCheck(object):
 
-    dependencies = {}
-    healthy = True
-
-    _services = {}
-
     def __init__(self, name, logger=None):
         self.name = name
         self._logger = logger
+        self._services = {}
+        self.healthy = True
+        self.dependencies = {}
 
     def add_dependency(self, name, check_func,
                        interval=timedelta(seconds=Service.DEFAULT_INTERVAL), level=levels.HARD):
