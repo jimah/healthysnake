@@ -75,6 +75,7 @@ class TestHealthCheck(object):
         assert status['healthy'] is False
 
     def test_status_raise_exception_counts_as_fail(self):
+        logging.disable(logging.CRITICAL)
         hc = HealthCheck('app')
         hc.add_dependency('dependency1', success_check)
         hc.add_dependency('dependency2', exception_check)
