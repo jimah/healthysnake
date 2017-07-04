@@ -78,6 +78,7 @@ class TestHealthCheck(object):
         hc = HealthCheck('app')
         hc.add_dependency('dependency1', success_check)
         hc.add_dependency('dependency2', exception_check)
+        hc._services['dependency2'].last_updated = hc._services['dependency2'].last_updated - timedelta(seconds=60)
         status = hc.status()
         assert status['healthy'] is False
 

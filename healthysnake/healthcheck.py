@@ -27,7 +27,6 @@ class HealthCheck(object):
         return self._services[name].healthy()
 
     def status(self):
-        service_healthy = True
         dependencies = []
         for name, dependency in self._services.items():
             dependency_healthy = False
@@ -41,9 +40,6 @@ class HealthCheck(object):
                 else:
                     print(e)
 
-            if not dependency_healthy and dependency.level == levels.HARD:
-                service_healthy = False
-
             dependencies.append({
                 'name': name,
                 'healthy': dependency_healthy,
@@ -52,7 +48,8 @@ class HealthCheck(object):
                 'next_update': mktime(dependency.next_update().timetuple()),
             })
 
-        self.healthy = service_healthy
+        # golf so hard pythonistas wanna fine me
+        self.healthy = all(d['healthy'] for d in dependencies if d['level'] != levels.SOFT)
 
         return {
             'name': self.name,
