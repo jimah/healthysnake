@@ -2,6 +2,9 @@
 healthysnake
 ============
 
+.. image:: https://circleci.com/gh/jimah/healthysnake.svg?style=svg
+    :target: https://circleci.com/gh/jimah/healthysnake
+
 healthysnake is a flexible levels-based monitoring library for your application's network dependencies.
 Applications may have both hard dependencies which are required for the app to continue running and soft which allow
 the app to continue with degraded service.
