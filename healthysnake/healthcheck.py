@@ -33,13 +33,13 @@ class HealthCheck(object):
             dependency_healthy = False
 
             try:
-                dependency_healthy = dependency.health()
+                dependency_healthy = dependency.healthy()
             except Exception as e:
                 # TODO figure out the best way of doing this
                 if self._logger:
                     self._logger.exception(e)
                 else:
-                    raise e
+                    print(e)
 
             if not dependency_healthy and dependency.level == levels.HARD:
                 service_healthy = False

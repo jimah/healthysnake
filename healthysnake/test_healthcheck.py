@@ -1,5 +1,6 @@
 import logging
-from datetime import timedelta
+from datetime import datetime, timedelta
+from time import mktime
 
 import pytest
 
@@ -9,6 +10,14 @@ from healthysnake.healthcheck import HealthCheck
 
 def success_check():
     return True
+
+
+def fail_check():
+    return False
+
+
+def exception_check():
+    raise Exception('bang')
 
 
 class TestHealthCheck(object):
@@ -35,4 +44,40 @@ class TestHealthCheck(object):
         hc.add_dependency('dependency', success_check)
         assert hc.check_dependency('dependency') is True
 
+    def test_status_success(self):
+        hc = HealthCheck('app')
+        hc.add_dependency('dependency1', success_check)
+        status = hc.status()
+        assert status['name'] == 'app'
+        assert status['healthy'] is True
+        dep = status['dependencies'][0]
+        assert dep['name'] == 'dependency1'
+        assert dep['healthy'] is True
+        assert dep['level'] is levels.HARD
+        last_updated = dep['last_updated']
+        assert last_updated <= mktime(datetime.utcnow().timetuple())
+        assert dep['next_update'] == last_updated + 10
+
+    def test_status_success_soft_failing(self):
+        hc = HealthCheck('app')
+        hc.add_dependency('dependency1', success_check)
+        hc.add_dependency('dependency2', fail_check, level=levels.SOFT)
+        status = hc.status()
+        assert status['healthy'] is True
+        soft_dep = status['dependencies'][1]
+        assert soft_dep['healthy'] is False
+
+    def test_status_unhealthy_hard_failing(self):
+        hc = HealthCheck('app')
+        hc.add_dependency('dependency1', success_check)
+        hc.add_dependency('dependency2', fail_check)
+        status = hc.status()
+        assert status['healthy'] is False
+
+    def test_status_raise_exception_counts_as_fail(self):
+        hc = HealthCheck('app')
+        hc.add_dependency('dependency1', success_check)
+        hc.add_dependency('dependency2', exception_check)
+        status = hc.status()
+        assert status['healthy'] is False
 

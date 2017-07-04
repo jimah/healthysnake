@@ -10,7 +10,7 @@ class Service(object):
 
     DEFAULT_INTERVAL = 10
 
-    def __init__(self, name, check, interval=timedelta(seconds=DEFAULT_INTERVAL), level=HARD):
+    def __init__(self, name, check, interval=timedelta(seconds=DEFAULT_INTERVAL), level=HARD, logger=None):
         self.name = name
         self.last_updated = datetime.utcnow()
         self.level = level
@@ -18,6 +18,7 @@ class Service(object):
         self._check = check
         self._interval = interval
         self._healthy = True
+        self._logger = logger
 
         self.update()
 
@@ -29,7 +30,14 @@ class Service(object):
         return self.STATE_HEALTHY if self._healthy else self.STATE_UNHEALTHY
 
     def update(self):
-        self._healthy = bool(self._check())
+        try:
+            self._healthy = bool(self._check())
+        except Exception as e:
+            self._healthy = False
+            if self._logger:
+                self._logger.exception(e)
+            else:
+                print(e)
         self.last_updated = datetime.utcnow()
 
     def healthy(self):
