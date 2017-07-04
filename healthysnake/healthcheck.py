@@ -1,3 +1,4 @@
+import logging
 from time import mktime
 from datetime import timedelta
 
@@ -38,7 +39,7 @@ class HealthCheck(object):
                 if self._logger:
                     self._logger.exception(e)
                 else:
-                    print(e)
+                    logging.getLogger(__name__).exception(e)
 
             dependencies.append({
                 'name': name,

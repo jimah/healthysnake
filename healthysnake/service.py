@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime, timedelta
 
 from healthysnake.levels import HARD
@@ -37,7 +38,7 @@ class Service(object):
             if self._logger:
                 self._logger.exception(e)
             else:
-                print(e)
+                logging.getLogger(__name__).exception(e)
         self.last_updated = datetime.utcnow()
 
     def healthy(self):
