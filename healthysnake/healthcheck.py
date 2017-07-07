@@ -30,37 +30,54 @@ class HealthCheck:
                        interval=timedelta(seconds=Dependency.DEFAULT_INTERVAL), level=levels.HARD):
         """
         Add a dependency to be tracked within the health check.
+
         :param name: name of the dependency
         :type name: str
 
         :param check_func: callback function to be run to check the health of a dependency
-        :type check_func: func
+        :type check_func: callable
 
-        :param interval:
+        :param interval: how often it should be checked
         :type interval: datetime.timedelta
 
-        :param level:
+        :param level: severity level for dependency
+        :type level: int
         """
         if name in self._services:
             raise exceptions.DependencyAlreadyPresentException(name + ' already present in health check')
+
         srv = Dependency(name, check_func, interval, level)
         self._services[name] = srv
 
     def check_dependency(self, name):
+        """
+        Check that the specified dependency is healthy
+
+        :param name: the name of the dependency
+        :type name: str
+
+        :return: result of health check
+        :rtype: bool
+        """
         if name not in self._services.keys():
             raise exceptions.DependencyNotPresentException(name + ' not present in health check dependencies')
+
         return self._services[name].healthy()
 
     def status(self):
+        """
+        Generate a dictionary representing the current health state of the system.
+
+        :return: dictionary representation of system state
+        :rtype: {}
+        """
         tracked_dependencies = []
         for name, dependency in self._services.items():
             dependency_healthy = False
-
             try:
                 dependency_healthy = dependency.healthy()
             except Exception as e:
                 self._logger.exception(e)
-
             tracked_dependencies.append({
                 'name': name,
                 'healthy': dependency_healthy,
