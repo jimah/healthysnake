@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from healthysnake.levels import HARD
 
 
-class Service:
+class Dependency:
 
     STATE_HEALTHY = "healthy"
     STATE_UNHEALTHY = "unhealthy"

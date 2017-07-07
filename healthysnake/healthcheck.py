@@ -3,23 +3,47 @@ from time import mktime
 from datetime import timedelta
 
 from healthysnake import exceptions, levels
-from healthysnake.service import Service
+from healthysnake.dependency import Dependency
 
 
 class HealthCheck:
+    """
+    Tracks the state of all dependencies.
+    """
 
-    def __init__(self, name, logger=None):
+    def __init__(self, name, logger=logging.getLogger(__name__)):
+        """
+        :param name: the name of the service running the health check
+        :type name: str
+
+        :param logger: optional logger, defaults to root logger
+        :type logger: logging.Logger
+        """
         self.name = name
-        self._logger = logger
-        self._services = {}
         self.healthy = True
         self.dependencies = {}
 
+        self._logger = logger
+        self._services = {}
+
     def add_dependency(self, name, check_func,
-                       interval=timedelta(seconds=Service.DEFAULT_INTERVAL), level=levels.HARD):
+                       interval=timedelta(seconds=Dependency.DEFAULT_INTERVAL), level=levels.HARD):
+        """
+        Add a dependency to be tracked within the health check.
+        :param name: name of the dependency
+        :type name: str
+
+        :param check_func: callback function to be run to check the health of a dependency
+        :type check_func: func
+
+        :param interval:
+        :type interval: datetime.timedelta
+
+        :param level:
+        """
         if name in self._services:
             raise exceptions.DependencyAlreadyPresentException(name + ' already present in health check')
-        srv = Service(name, check_func, interval, level)
+        srv = Dependency(name, check_func, interval, level)
         self._services[name] = srv
 
     def check_dependency(self, name):
@@ -28,20 +52,16 @@ class HealthCheck:
         return self._services[name].healthy()
 
     def status(self):
-        dependencies = []
+        tracked_dependencies = []
         for name, dependency in self._services.items():
             dependency_healthy = False
 
             try:
                 dependency_healthy = dependency.healthy()
             except Exception as e:
-                # TODO figure out the best way of doing this
-                if self._logger:
-                    self._logger.exception(e)
-                else:
-                    logging.getLogger(__name__).exception(e)
+                self._logger.exception(e)
 
-            dependencies.append({
+            tracked_dependencies.append({
                 'name': name,
                 'healthy': dependency_healthy,
                 'level': dependency.level,
@@ -50,10 +70,10 @@ class HealthCheck:
             })
 
         # golf so hard pythonistas wanna fine me
-        self.healthy = all(d['healthy'] for d in dependencies if d['level'] != levels.SOFT)
+        self.healthy = all(d['healthy'] for d in tracked_dependencies if d['level'] != levels.SOFT)
 
         return {
             'name': self.name,
             'healthy': self.healthy,
-            'dependencies': dependencies,
+            'dependencies': tracked_dependencies,
         }
