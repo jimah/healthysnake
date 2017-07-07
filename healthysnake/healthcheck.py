@@ -6,7 +6,7 @@ from healthysnake import exceptions, levels
 from healthysnake.service import Service
 
 
-class HealthCheck(object):
+class HealthCheck:
 
     def __init__(self, name, logger=None):
         self.name = name
