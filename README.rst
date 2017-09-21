@@ -64,7 +64,7 @@ Example usage
 Example Output
 ~~~~~~~~~~~~~
 
-.. code-block:: json
+.. code-block:: javascript
     {
         'name':'example_application',
         'healthy':True,
