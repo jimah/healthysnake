@@ -5,7 +5,15 @@ healthysnake
 .. image:: https://circleci.com/gh/jimah/healthysnake.svg?style=svg
     :target: https://circleci.com/gh/jimah/healthysnake
 
-healthysnake is a flexible levels-based monitoring library for your application's network dependencies.
+healthysnake is a flexible levels-based monitoring library for your application's network dependencies. It is intended
+as a first step towards improved visibility in your applications before committing to a more intensive monitoring
+solution.
+
+Currently, healthysnake is in development and should be used in production systems at your own risk.
+
+Levels
+~~~~~~
+
 Applications may have both hard dependencies which are required for the app to continue running and soft which allow
 the app to continue with degraded service.
 
@@ -59,6 +67,8 @@ Alerts
 healthysnake currently supports the following alerting systems:
 
 * Slack
+* TODO Sentry
+* TODO Email
 
 .. code-block:: python
 
