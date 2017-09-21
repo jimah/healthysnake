@@ -1,4 +1,7 @@
+import os
+
 from healthysnake import healthcheck, levels
+from healthysnake.alerts.slack.manager import SlackAlertManager
 
 hc = healthcheck.HealthCheck('example_application')
 
