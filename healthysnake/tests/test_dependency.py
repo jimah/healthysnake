@@ -20,7 +20,7 @@ class TestDependencyInitialisation(object):
     def test_str(self):
         srv = Dependency('sherlock', success_check)
         stringified = str(srv)
-        assert stringified == 'sherlock [state=healthy, level=1]'
+        assert stringified == 'sherlock [state=healthy, level=2]'
 
     def test_state_str(self):
         srv = Dependency('sherlock', success_check)
