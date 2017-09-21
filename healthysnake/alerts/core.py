@@ -4,7 +4,7 @@ from .exceptions import ImproperlyConfiguredError
 class Alert:
     """The core alert data model, contains information to be passed to a manager."""
 
-    def __init__(self, dependency, message, severity, metadata=None):
+    def __init__(self, application, dependency, message, severity, metadata=None, source='localhost'):
         """Create a new Alert.
 
         :param message: string data to be sent to the alert manager
@@ -19,10 +19,12 @@ class Alert:
         if metadata is None:
             metadata = {}
 
+        self.application = application
         self.dependency = dependency
         self.message = message
         self.severity = severity
         self.metadata = metadata
+        self.source = source
 
 
 class AbstractAlerterManager:

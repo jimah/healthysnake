@@ -94,6 +94,7 @@ class HealthCheck:
                 for manager in self._alert_managers:
                     # TODO name the check that failed
                     manager.alert(Alert(
+                        application=self.name,
                         dependency=name,
                         message='failed a routine check',
                         severity=dependency.level,
