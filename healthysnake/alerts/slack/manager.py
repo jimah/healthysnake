@@ -2,7 +2,7 @@ import json
 
 import requests
 
-from healthysnake.alerts.core import AbstractAlerterManager
+from healthysnake.alerts.manager import AbstractAlerterManager
 import healthysnake.levels as levels
 
 
@@ -18,7 +18,7 @@ class SlackAlertManager(AbstractAlerterManager):
             'fields': [
                 {
                     'title': alert_message.application,
-                    'value': '127.0.0.1',
+                    'value': 'TODO support IP source',
                     'short': True,
                 },
                 {
