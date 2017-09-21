@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from healthysnake import exceptions, levels
 from healthysnake.dependency import Dependency
+from healthysnake.alerts.core import Alert
 
 
 class HealthCheck:
@@ -11,7 +12,10 @@ class HealthCheck:
     Tracks the state of all dependencies.
     """
 
-    def __init__(self, name, logger=logging.getLogger(__name__)):
+    def __init__(self, name,
+                 logger=logging.getLogger(__name__),
+                 alert_managers=None,
+                 ):
         """
         :param name: the name of the service running the health check
         :type name: str
@@ -25,6 +29,10 @@ class HealthCheck:
 
         self._logger = logger
         self._services = {}
+
+        if alert_managers is None:
+            alert_managers = []
+        self._alert_managers = alert_managers
 
     def __str__(self):
         return self.status()
@@ -81,6 +89,16 @@ class HealthCheck:
                 dependency_healthy = dependency.healthy()
             except Exception as e:
                 self._logger.exception(e)
+
+            if not dependency_healthy:
+                for manager in self._alert_managers:
+                    # TODO name the check that failed
+                    manager.alert(Alert(
+                        dependency=name,
+                        message='failed a routine check',
+                        severity=dependency.level,
+                    ))
+
             tracked_dependencies.append({
                 'name': name,
                 'healthy': dependency_healthy,

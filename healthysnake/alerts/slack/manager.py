@@ -1,4 +1,3 @@
-import os
 import json
 
 import requests
@@ -11,10 +10,26 @@ class SlackAlertManager(AbstractAlerterManager):
     def __init__(self, webhook):
         self.webhook_url = webhook
 
-    def alert(self, message):
+    def alert(self, alert_message):
         self._send_to_webhook({
-            'text': message,
+            'text': '{0}: {1} {2}'.format(
+                alert_message.dependency,
+                alert_message.message,
+                self.how_many_fires(alert_message.severity),
+            ),
         })
+
+    @staticmethod
+    def how_many_fires(severity):
+        fires = ''
+
+        end = int(severity)
+        i = 0
+        while i < end:
+            fires += ':fire: '
+            i += 1
+
+        return fires
 
     def _send_to_webhook(self, payload):
         response = requests.post(

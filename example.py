@@ -3,7 +3,10 @@ import os
 from healthysnake import healthcheck, levels
 from healthysnake.alerts.slack.manager import SlackAlertManager
 
-hc = healthcheck.HealthCheck('example_application')
+hc = healthcheck.HealthCheck('example_application',
+                             alert_managers=[SlackAlertManager(
+                                 webhook=os.environ['SLACK_WEBHOOK'],
+                             )])
 
 
 def check_success():
