@@ -52,3 +52,19 @@ Example usage
     # for non vital services, you can mark them as a "soft" dependency, one that your app can continue
     # without
     hc.add_dependency('non_vital_service', check_external_service_health, level=levels.SOFT)
+
+Alerts
+~~~~~~
+
+healthysnake currently supports the following alerting systems:
+
+* Slack
+
+.. code-block:: python
+
+    from healthysnake.alerts.slack.manager import SlackAlertManager
+
+    hc = healthcheck.HealthCheck('your_application_name',
+                                 alert_managers=[SlackAlertManager(
+                                     webhook=os.environ['SLACK_WEBHOOK'],  # where this is your slack webhook
+                                 )])
