@@ -26,6 +26,9 @@ class HealthCheck:
         self._logger = logger
         self._services = {}
 
+    def __str__(self):
+        return self.status()
+
     def add_dependency(self, name, check_func,
                        interval=timedelta(seconds=Dependency.DEFAULT_INTERVAL), level=levels.HARD):
         """
