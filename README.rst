@@ -61,6 +61,31 @@ Example usage
     # without
     hc.add_dependency('non_vital_service', check_external_service_health, level=levels.SOFT)
 
+Example Output
+~~~~~~~~~~~~~
+
+.. code-block:: json
+    {
+        'name':'example_application',
+        'healthy':True,
+        'dependencies':[
+            {
+                'healthy':True,
+                'next_update':1505987207.0,
+                'last_updated':1505987197.0,
+                'level':2,
+                'name':'success'
+            },
+            {
+                'healthy':False,
+                'next_update':1505987207.0,
+                'last_updated':1505987197.0,
+                'level':1,
+                'name':'soft_failure'
+            }
+        ]
+    }
+
 Alerts
 ~~~~~~
 
