@@ -93,6 +93,7 @@ Alerts
 healthysnake currently supports the following alerting systems:
 
 * Slack
+    - `pip install requests` tested at 2.18.4
 * TODO Sentry
 * TODO Email
 
