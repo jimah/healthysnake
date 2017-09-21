@@ -64,7 +64,7 @@ class TestHealthCheck(object):
         hc.add_dependency('dependency2', fail_check, level=levels.SOFT)
         status = hc.status()
         assert status['healthy'] is True
-        soft_dep = status['dependencies'][1]
+        soft_dep = next(dep for dep in status['dependencies'] if dep['level']==levels.SOFT)
         assert soft_dep['healthy'] is False
 
     def test_status_unhealthy_hard_failing(self):
