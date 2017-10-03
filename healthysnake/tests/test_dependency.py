@@ -37,6 +37,6 @@ class TestDependencyInitialisation(object):
     def test_healthy(self):
         srv = Dependency('sherlock', success_check)
         srv._healthy = False
-        assert srv.healthy() is False
+        assert srv.healthy() == (False, '')
         srv.last_updated = srv.last_updated - timedelta(seconds=60)
-        assert srv.healthy() is True
+        assert srv.healthy() == (True, '')
