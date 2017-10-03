@@ -84,25 +84,25 @@ class HealthCheck:
         """
         tracked_dependencies = []
         for name, dependency in self._services.items():
-            dependency_healthy = False
+            dependency_healthy = (False, '')
             try:
                 dependency_healthy = dependency.healthy()
             except Exception as e:
                 self._logger.exception(e)
 
-            if not dependency_healthy:
+            if not dependency_healthy[0]:
                 for manager in self._alert_managers:
                     # TODO name the check that failed
                     manager.alert(Alert(
                         application=self.name,
                         dependency=name,
-                        message='failed a routine check',
+                        message=dependency_healthy[1],
                         severity=dependency.level,
                     ))
 
             tracked_dependencies.append({
                 'name': name,
-                'healthy': dependency_healthy,
+                'healthy': dependency_healthy[0],
                 'level': dependency.level,
                 'last_updated': mktime(dependency.last_updated.timetuple()),
                 'next_update': mktime(dependency.next_update().timetuple()),

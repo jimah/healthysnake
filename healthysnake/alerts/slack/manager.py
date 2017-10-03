@@ -18,7 +18,6 @@ class SlackAlertManager(AbstractAlerterManager):
             'fields': [
                 {
                     'title': alert_message.application,
-                    'value': 'TODO support IP source',
                     'short': True,
                 },
                 {

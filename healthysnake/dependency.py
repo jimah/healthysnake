@@ -39,6 +39,7 @@ class Dependency:
         self._check = check_func
         self._interval = interval
         self._healthy = True
+        self._message = ''
         self._logger = logger
 
         self.update()
@@ -65,7 +66,12 @@ class Dependency:
         Update the health state of the dependency.
         """
         try:
-            self._healthy = bool(self._check())
+            checked_data = self._check()
+            if type(checked_data) == bool:
+                checked_data = (checked_data, '')
+            # TODO assert correct type here
+            self._healthy = checked_data[0]
+            self._message = checked_data[1]
         except Exception as e:
             self._healthy = False
             self._logger.exception(e)
@@ -77,11 +83,11 @@ class Dependency:
         Retreive the current health of the dependency.
 
         :return: current health
-        :rtype: bool
+        :rtype: tuple(bool, str)
         """
         if self.due():
             self.update()
-        return self._healthy
+        return self._healthy, self._message
 
     def due(self):
         """
