@@ -25,8 +25,8 @@ def check_filesystem_storage(disk, failure_threshold=90):
         # size = trimmed[DF_SIZE_COL]
         # used = trimmed[DF_USED_COL]
         capacity_perc = capacity[:-1]
-        if failure_threshold > int(capacity_perc):
-            return False
+        if failure_threshold < int(capacity_perc):
+            return False, 'disk {0} reached {1}% capacity'.format(disk, capacity_perc)
 
         return True
 

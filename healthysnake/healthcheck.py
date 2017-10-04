@@ -103,6 +103,7 @@ class HealthCheck:
             tracked_dependencies.append({
                 'name': name,
                 'healthy': dependency_healthy[0],
+                'message': dependency_healthy[1],
                 'level': dependency.level,
                 'last_updated': mktime(dependency.last_updated.timetuple()),
                 'next_update': mktime(dependency.next_update().timetuple()),
