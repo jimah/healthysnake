@@ -5,9 +5,7 @@ from healthysnake.levels import HARD
 
 
 class Dependency:
-    """
-    An individual dependency of the system.
-    """
+    """An individual dependency of the system."""
 
     STATE_HEALTHY = 'healthy'
     STATE_UNHEALTHY = 'unhealthy'
@@ -16,7 +14,8 @@ class Dependency:
 
     def __init__(self, name, check_func,
                  interval=timedelta(seconds=DEFAULT_INTERVAL), level=HARD, logger=logging.getLogger(__name__)):
-        """
+        """Initialise a new dependency.
+
         :param name: name of the dependency
         :type name: str
 
@@ -45,8 +44,8 @@ class Dependency:
         self.update()
 
     def __str__(self):
-        """
-        :return: string representation of the dependency
+        """Return a string representation of the dependency.
+
         :rtype: str
         """
         return '{name} [state={state}, level={level}]'.format(
@@ -62,9 +61,7 @@ class Dependency:
         return self.STATE_HEALTHY if self._healthy else self.STATE_UNHEALTHY
 
     def update(self):
-        """
-        Update the health state of the dependency.
-        """
+        """Update the health state of the dependency."""
         try:
             checked_data = self._check()
             if type(checked_data) == bool:
@@ -79,8 +76,7 @@ class Dependency:
         self.last_updated = datetime.utcnow()
 
     def healthy(self):
-        """
-        Retreive the current health of the dependency.
+        """Retrieve the current health of the dependency.
 
         :return: current health
         :rtype: tuple(bool, str)
@@ -90,8 +86,7 @@ class Dependency:
         return self._healthy, self._message
 
     def due(self):
-        """
-        Check whether the dependency is due to update health status.
+        """Check whether the dependency is due to update health status.
 
         :return: true if due to update
         :rtype: bool
@@ -99,8 +94,7 @@ class Dependency:
         return datetime.utcnow() > self.next_update()
 
     def next_update(self):
-        """
-        Calculate the next update time.
+        """Calculate the next update time.
 
         :return: the next update time
         :rtype: datetime.datetime
