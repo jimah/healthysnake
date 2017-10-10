@@ -6,7 +6,7 @@ DF_USED_COL = 2
 DF_CAPACITY_COL = 4
 
 
-def check_filesystem_storage(disk, failure_threshold=90):
+def check_remaining_capacity(disk, failure_threshold=90):
     def callback():
         df = subprocess.Popen(['df', '-g', '-h'], stdout=subprocess.PIPE)
         output = df.communicate()
