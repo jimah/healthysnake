@@ -1,9 +1,6 @@
-============
-healthysnake
-============
+# healthysnake
 
-.. image:: https://circleci.com/gh/jimah/healthysnake.svg?style=svg
-    :target: https://circleci.com/gh/jimah/healthysnake
+[![CircleCI](https://circleci.com/gh/dammitjim/healthysnake.svg?style=svg)](https://circleci.com/gh/dammitjim/healthysnake)
 
 healthysnake is a flexible levels-based monitoring library for your application's network dependencies. It is intended
 as a first step towards improved visibility in your applications before committing to a more intensive monitoring
@@ -11,28 +8,23 @@ solution.
 
 Currently, healthysnake is in development and should be used in production systems at your own risk.
 
-Levels
-~~~~~~
+## Levels
 
 Applications may have both hard dependencies which are required for the app to continue running and soft which allow
 the app to continue with degraded service.
 
 All times are in UTC.
 
-Installation
-~~~~~~~~~~~~
+## Installation
 
-.. code-block:: bash
-
+```bash
     pip install healthysnake
-
+```
 (when it gets onto pip hopefully)
 
-Example usage
-~~~~~~~~~~~~~
+## Example usage
 
-.. code-block:: python
-
+```python
     from datetime import timedelta
     from healthysnake import healthcheck, levels
 
@@ -60,12 +52,11 @@ Example usage
     # for non vital services, you can mark them as a "soft" dependency, one that your app can continue
     # without
     hc.add_dependency('non_vital_service', check_external_service_health, level=levels.SOFT)
+```
 
-Example Output
-~~~~~~~~~~~~~
+## Example Output
 
-.. code-block:: javascript
-
+```json
     {
         'name':'example_application',
         'healthy':True,
@@ -86,9 +77,9 @@ Example Output
             }
         ]
     }
+```
 
-Alerts
-~~~~~~
+## Alerts
 
 healthysnake currently supports the following alerting systems:
 
@@ -96,12 +87,3 @@ healthysnake currently supports the following alerting systems:
     - `pip install requests` tested at 2.18.4
 * TODO Sentry
 * TODO Email
-
-.. code-block:: python
-
-    from healthysnake.alerts.slack.manager import SlackAlertManager
-
-    hc = healthcheck.HealthCheck('your_application_name',
-                                 alert_managers=[SlackAlertManager(
-                                     webhook=os.environ['SLACK_WEBHOOK'],  # where this is your slack webhook
-                                 )])
