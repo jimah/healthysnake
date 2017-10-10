@@ -4,5 +4,4 @@ machine:
 
 test:
   override:
-    - pytest ./healthysnake
-    - flake8 ./
+    - tox
