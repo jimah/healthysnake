@@ -11,7 +11,7 @@ setup(
 
     version='0.1.0',
 
-    description='A network service utility for monitoring service health',
+    description='A levels based health monitoring library',
     long_description=long_desc,
 
     license='MIT',
@@ -24,5 +24,10 @@ setup(
     ],
 
     keywords='health check service monitoring network',
-    packages=['healthysnake'],
+    packages=[
+        'healthysnake',
+        'healthysnake.checkers',
+        'healthysnake.alerts',
+        'healthysnake.alerts.slack'
+    ],
 )
