@@ -8,13 +8,18 @@ import healthysnake.levels as levels
 
 class SlackAlertManager(AbstractAlerterManager):
 
+    SLACK_COLOR_GOOD = 'good'
+    SLACK_COLOR_DANGER = 'danger'
+    SLACK_COLOR_WARNING = 'warning'
+    SLACK_FIRE_EMOJI = ':fire:'
+
     def __init__(self, webhook):
         self.webhook_url = webhook
 
     def alert(self, alert_message):
         self._send_to_webhook({
             'fallback': 'ALERT {0} failed {1}'.format(alert_message.application, alert_message.dependency),
-            'color': self._color_from_severity(alert_message.severity),
+            'color': self.slack_color_from_level(alert_message.severity),
             'fields': [
                 {
                     'title': alert_message.application,
@@ -34,23 +39,26 @@ class SlackAlertManager(AbstractAlerterManager):
 
     @staticmethod
     def how_many_fires(severity):
+        if not severity:
+            return ''
+
         fires = ''
 
         end = int(severity)
         i = 0
         while i < end:
-            fires += ':fire: '
+            fires += SlackAlertManager.SLACK_FIRE_EMOJI + ' '
             i += 1
 
         return fires
 
     @staticmethod
-    def _color_from_severity(severity):
+    def slack_color_from_level(severity):
         if severity == levels.SOFT:
-            return 'warning'
+            return SlackAlertManager.SLACK_COLOR_WARNING
         elif severity == levels.HARD:
-            return 'danger'
-        return 'good'
+            return SlackAlertManager.SLACK_COLOR_DANGER
+        return SlackAlertManager.SLACK_COLOR_GOOD
 
     def _send_to_webhook(self, payload):
         response = requests.post(

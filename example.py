@@ -1,8 +1,8 @@
 import os
 
 from healthysnake import healthcheck, levels
-from healthysnake.checkers import redis
 from healthysnake.alerts.slack.manager import SlackAlertManager
+from healthysnake.checkers import redis, system
 
 hc = healthcheck.HealthCheck('example_application',
                              alert_managers=[SlackAlertManager(
@@ -10,20 +10,16 @@ hc = healthcheck.HealthCheck('example_application',
                              )])
 
 
-def check_success():
+def custom_dependency_check():
     # chosen by fair dice roll
     roll = 4
     return (roll == 4, '')
 
-hc.add_dependency('success', check_success)
 
+# hc.add_dependency('soft_failure', check_soft_failure, level=levels.SOFT)
+hc.add_dependency('redis', redis.check_redis_connection('127.0.0.1'))
+hc.add_dependency('disk_space', system.check_filesystem_storage('/dev/disk0s2', failure_threshold=25),
+                  level=levels.SOFT)
 
-def check_soft_failure():
-    roll = 2
-    return (roll == 4, '')
-
-
-hc.add_dependency('soft_failure', check_soft_failure, level=levels.SOFT)
-hc.add_dependency('redis', redis.check_redis_connection)
 
 print(hc.status())
