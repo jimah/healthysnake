@@ -2,7 +2,7 @@ import os
 
 from healthysnake import healthcheck, levels
 from healthysnake.alerts.slack.manager import SlackAlertManager
-from healthysnake.checkers import redis, storage, system, network
+from healthysnake.checkers import network, redis, storage, system
 
 hc = healthcheck.HealthCheck('example_application',
                              alert_managers=[SlackAlertManager(
