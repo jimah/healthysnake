@@ -3,10 +3,6 @@ from redis import ConnectionError
 from healthysnake.checkers.redis import RedisConnectionPingable
 
 
-def success_check():
-    return True
-
-
 class TestRedisConnectionPingable(object):
     """
     Tests the RedisConnectionPingable checker
