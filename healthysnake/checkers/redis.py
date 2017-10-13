@@ -24,5 +24,4 @@ class RedisConnectionPingable:
         except redis.ConnectionError:
             return False, 'cannot connect to redis'
         except Exception as e:
-            return False, e
-        return False, 'an uncaught exception caused RedisConnectionPingable to fail'
+            return False, 'an uncaught exception caused RedisConnectionPingable to fail'

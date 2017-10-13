@@ -1,5 +1,6 @@
 # for testing / linting
 pytest==3.1.2
+pytest-mock==1.6.3
 flake8==3.3.0
 freezegun==0.3.9
 tox==2.9.1
