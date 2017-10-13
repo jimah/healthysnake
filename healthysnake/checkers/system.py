@@ -11,6 +11,10 @@ class MemoryUtilisationCheck:
     def __call__(self):
         """Get the virtual memory, check against the failure threshold."""
         vmem = psutil.virtual_memory()
-        return vmem.percent < self.failure_threshold, 'currently sitting at {0}% memory consumption'.format(
+
+        if vmem.percent < self.failure_threshold:
+            return True
+
+        return False, 'currently sitting at {0}% memory consumption'.format(
             vmem.percent,
         )
