@@ -12,7 +12,11 @@ class DiskCapacityCheck:
     def __call__(self):
         """Check the disk usage for the given mountpoint against the failure threshold."""
         disk_usage = psutil.disk_usage(self.mountpoint)
-        return disk_usage.percent < self.failure_threshold, 'mount point "{0}" reached {1}% capacity'.format(
+
+        if disk_usage.percent < self.failure_threshold:
+            return True
+
+        return False, 'mount point "{0}" reached {1}% capacity'.format(
             self.mountpoint,
             disk_usage.percent,
         )
