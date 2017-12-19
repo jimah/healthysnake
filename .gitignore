@@ -9,3 +9,5 @@ dist
 .tox
 build
 dist
+docs/_build
+.DS_Store
