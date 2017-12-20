@@ -8,7 +8,7 @@ import pytest
 def run_tests(*test_args):
     os.environ['DJANGO_SETTINGS_MODULE'] = 'django_settings'
     django.setup()
-    failures = pytest.main(*test_args)
+    failures = pytest.main(list(test_args))
     sys.exit(bool(failures))
 
 
