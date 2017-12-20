@@ -1,3 +1,5 @@
+import pytest
+
 from django.apps import apps
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
@@ -92,9 +94,4 @@ class TestAppConfig(object):
 
         app_config = apps.get_app_config('healthysnake')
 
-        try:
-            app_config.ready()
-        except ImproperlyConfigured:
-            pass
-        else:
-            assert False, "app config ready method did not raise improperly configured exeption"
+        pytest.raises(ImproperlyConfigured, app_config.ready)
