@@ -26,7 +26,7 @@ class TestHealthCheckView:
         """
         The view should render
         """
-        mock = mocker.Mock(return_value={'foo': 'bar'})
+        mock = mocker.Mock(return_value={'healthy': True})
         mocker.patch('healthysnake.contrib.django.views.HealthCheckView.get_health_status', mock)
 
         response = self._get_view().get(self.url)
@@ -36,7 +36,21 @@ class TestHealthCheckView:
         assert response.status_code == 200
         assert isinstance(response, JsonResponse)
         assert len(json_data.keys()) == 1
-        assert json_data['foo'] == 'bar'
+        assert json_data['healthy']
+
+    def test_returns_http_503(self, mocker):
+        """
+        The view should return an http 503 if the service is not healthy
+        """
+        mock = mocker.Mock(return_value={'healthy': False})
+        mocker.patch('healthysnake.contrib.django.views.HealthCheckView.get_health_status', mock)
+
+        response = self._get_view().get(self.url)
+        decoded_content = response.content.decode("utf-8")
+        json_data = json.loads(decoded_content)
+
+        assert response.status_code == 503
+        assert json_data['healthy'] == False
 
     def test_get_health_checker(self, mocker):
         """
